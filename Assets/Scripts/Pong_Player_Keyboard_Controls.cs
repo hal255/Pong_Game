@@ -5,13 +5,12 @@ using UnityEngine;
 public class Pong_Player_Keyboard_Controls : MonoBehaviour {
     private bool debug = false;
 
-    [SerializeField]
-    float move_speed = 1.0f;
+    public float move_speed = 3.0f;
 
-    private float modifier = 1.0f;
+    public float modifier = 1.0f;
     private bool isPlayer01 = true;
-    private bool isWestWallCollided = false;        // if colliding with wall, stop moving in direction of west wall
-    private bool isEastWallCollided = false;        // if colliding with wall, stop moving in direction of east wall
+    private bool isNorthWallCollided = false;        // if colliding with wall, stop moving in direction of north wall
+    private bool isSouthWallCollided = false;        // if colliding with wall, stop moving in direction of south wall
 
     // Use this for initialization
     void Start () {
@@ -25,76 +24,76 @@ public class Pong_Player_Keyboard_Controls : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.A) && isPlayer01)
+        if (Input.GetKey(KeyCode.W) && isPlayer01)
         {
             if (debug)
                 Debug.Log("Pressed player1 left key.");
-            moveLeft();
+            moveUp();
         }
 
-        if (Input.GetKey(KeyCode.D) && isPlayer01)
+        if (Input.GetKey(KeyCode.S) && isPlayer01)
         {
             if (debug)
                 Debug.Log("Pressed player1 right key.");
-            moveRight();
+            moveDown();
         }
 
-        if (Input.GetKey(KeyCode.J) && !isPlayer01)
+        if (Input.GetKey(KeyCode.I) && !isPlayer01)
         {
             if (debug)
                 Debug.Log("Pressed player2 left key.");
-            moveLeft();
+            moveUp();
         }
 
-        if (Input.GetKey(KeyCode.L) && !isPlayer01)
+        if (Input.GetKey(KeyCode.K) && !isPlayer01)
         {
             if (debug)
                 Debug.Log("Pressed player2 right key.");
-            moveRight();
+            moveDown();
         }
 
     }
 
-    private void moveLeft()
+    private void moveUp()
     {
         // if colliding with west wall, stop moving west
-        if (!isWestWallCollided)
+        if (!isNorthWallCollided)
         {
-            if (move_speed > 0)
-                move_speed *= -1.0f;
-            transform.Translate(Vector3.forward * move_speed * modifier * Time.deltaTime);
+            //if (move_speed > 0)
+            //    move_speed *= -1.0f;
+            transform.Translate(Vector2.up * move_speed * Time.deltaTime);
         }
     }
-    private void moveRight()
+    private void moveDown()
     {
         // if colliding with east wall, stop moving east
-        if (!isEastWallCollided)
+        if (!isSouthWallCollided)
         {
-            if (move_speed < 0)
-                move_speed *= -1.0f;
-            transform.Translate(Vector3.forward * move_speed * modifier * Time.deltaTime);
+            //if (move_speed < 0)
+            //    move_speed *= -1.0f;
+            transform.Translate(Vector2.down * move_speed * Time.deltaTime);
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         string collided_name = collision.gameObject.name;
         Debug.Log(gameObject.name + " collided with " + collided_name);
 
-        if (collided_name.Contains("west"))
-            isWestWallCollided = true;
-        if (collided_name.Contains("east"))
-            isEastWallCollided = true;
+        if (collided_name.Contains("north"))
+            isNorthWallCollided = true;
+        if (collided_name.Contains("south"))
+            isSouthWallCollided = true;
     }
 
-    private void OnCollisionExit(Collision collision)
+    private void OnCollision2DExit(Collision2D collision)
     {
         string collided_name = collision.gameObject.name;
         Debug.Log(gameObject.name + " no longer collides with " + collided_name);
 
-        if (collided_name.Contains("west"))
-            isWestWallCollided = false;
-        if (collided_name.Contains("east"))
-            isEastWallCollided = false;
+        if (collided_name.Contains("north"))
+            isNorthWallCollided = false;
+        if (collided_name.Contains("south"))
+            isSouthWallCollided = false;
     }
 }

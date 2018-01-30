@@ -5,60 +5,79 @@ using UnityEngine;
 public class Pong_Ball_Motion : MonoBehaviour {
     private bool debug = true;
 
-    [SerializeField]
-    float move_speed = 10.0f;               // velocity of ball
-    private float rotate_angle = 0.0f;      // angle of ball, from top down view
+    public float move_speed = 10.0f;               // velocity of ball
 
-    //float added_speed = 0.0f;               // added speed from user's paddle
+    public Vector2 prev_pos = new Vector2(0, 0);
+    public Vector2 next_pos = new Vector2(0, 0);
 
-	// Use this for initialization
-	void Start () {
-        // generate a random angle and move towards that direction
-        rotate_angle = GetNewAngle(0);
-        SetBallRotation();
+
+
+    // Use this for initialization
+    void Start () {
+        gameObject.GetComponent<Rigidbody2D>().AddForce(GetForce() * move_speed);
     }
 
     // Update is called once per frame
-    void Update () {
-        transform.Translate(Vector3.forward * move_speed * Time.deltaTime);
-	}
-
-    float GetNewAngle(float angle)
+    void Update()
     {
-        angle = Random.value * 359;
-        if ((angle >= 25f && angle <= 155f) || (angle >= 205f && angle <= 335f))
-            return angle;
-        else
-            return GetNewAngle(angle);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        //if (debug)
-        //    Debug.Log("Pong ball collided with " + collision.collider.name + "!! current angle: " + rotate_angle);
-        Ray ray = new Ray(transform.position, transform.forward);
-        RaycastHit hit;
-        //if (Physics.Raycast(ray, out hit, move_speed * Time.deltaTime, 10))
-        //{
-        //    Vector3 reflectDir = Vector3.Reflect(ray.direction, hit.normal);
-        //    float rot = 90 - Mathf.Atan2(reflectDir.z, reflectDir.x) * Mathf.Rad2Deg;
-        //    transform.eulerAngles = new Vector3(0, rot, 0);
-        //}
-        if (Physics.Raycast(ray, out hit, 0.5f))
+        string collider_name = collision.gameObject.name;
+        if(collider_name != "Floor")
         {
-            Debug.Log("Pong ball colliding with: " + hit.collider.name + ", hit distance: " + hit.distance + ", current angle: " + rotate_angle);
-            Vector3 reflectDir = Vector3.Reflect(ray.direction, hit.normal);
-            float rot = 90 - Mathf.Atan2(reflectDir.z, reflectDir.x) * Mathf.Rad2Deg;
-            transform.eulerAngles = new Vector3(0, rot, 0);
-            //rotate_angle += rot;
-            //SetBallRotation();
+            Debug.Log("Pong ball collided with " + collider_name);
+            FindNext(true);
         }
     }
 
-    void SetBallRotation()
+    public void FindNext(bool isCollided)
     {
-        transform.Rotate(Vector3.up * rotate_angle);       // "up" is the y-axis, the top-down view
-        if (debug)
-            Debug.Log("Pong ball new angle: " + rotate_angle);
+        next_pos.x = 2 * transform.position.x - prev_pos.x;
+        next_pos.y = 2 * transform.position.y - prev_pos.y;
+        //// if collided, move in opposite direction of prev_pos
+        //if (isCollided)
+        //{
+        //    // if prev_x is left of current_x, move right
+        //    if (prev_pos.x < transform.position.x)
+        //        next_pos.x = 2 * transform.position.x - prev_pos.x;
+        //    else if (prev_pos.x > transform.position.x)
+        //        next_pos.x = -2 * transform.position.x - prev_pos.x;
+        //    else
+        //        next_pos.x = prev_pos.x;
+
+        //    // if prev_y is bottom of current_y, move up
+        //    if (prev_pos.y < transform.position.y)
+        //        next_pos.y = 2 * transform.position.y - prev_pos.y;
+        //    else if (prev_pos.y > transform.position.y)
+        //        next_pos.y = -2 * transform.position.y - prev_pos.y;
+        //    else
+        //        next_pos.y = prev_pos.y;
+        //}
+        //// else, apply the midpoint formula
+        //else
+        //{
+        //    next_pos.x = 2 * transform.position.x - prev_pos.x;
+        //    next_pos.y = 2 * transform.position.y - prev_pos.y;
+        //}
+    }
+
+    public void SetPrevPos(bool isNew)
+    {
+        if (isNew)
+        {
+            prev_pos.x = Random.value * 18 - 9;
+            prev_pos.y = Random.value * 6 - 3;
+        }
+        else
+            prev_pos = transform.position;
+    }
+
+    public Vector2 GetForce()
+    {
+        float new_x = Random.value * 18 - 9;
+        float new_y = Random.value * 6 - 3;
+        return new Vector2(new_x, new_y);
     }
 }
