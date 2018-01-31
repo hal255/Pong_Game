@@ -86,7 +86,7 @@ public class Pong_Player_Keyboard_Controls : MonoBehaviour {
             isSouthWallCollided = true;
     }
 
-    private void OnCollision2DExit(Collision2D collision)
+    private void OnCollisionExit2D(Collision2D collision)
     {
         string collided_name = collision.gameObject.name;
         Debug.Log(gameObject.name + " no longer collides with " + collided_name);
