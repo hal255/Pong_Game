@@ -8,6 +8,7 @@ public class Pong_Player_Keyboard_Controls : MonoBehaviour {
     public float move_speed = 3.0f;
 
     public float modifier = 1.0f;
+    public Pong_Ball_Motion pong_ball;
     private bool isPlayer01 = true;
     private bool isNorthWallCollided = false;        // if colliding with wall, stop moving in direction of north wall
     private bool isSouthWallCollided = false;        // if colliding with wall, stop moving in direction of south wall
@@ -52,6 +53,12 @@ public class Pong_Player_Keyboard_Controls : MonoBehaviour {
             moveDown();
         }
 
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            if (debug)
+                Debug.Log("Added Random Force to pong ball.");
+            pong_ball.AddRandomForce();
+        }
     }
 
     private void moveUp()
@@ -78,7 +85,8 @@ public class Pong_Player_Keyboard_Controls : MonoBehaviour {
     private void OnCollisionEnter2D(Collision2D collision)
     {
         string collided_name = collision.gameObject.name;
-        Debug.Log(gameObject.name + " collided with " + collided_name);
+        if (debug)
+            Debug.Log(gameObject.name + " collided with " + collided_name);
 
         if (collided_name.Contains("north"))
             isNorthWallCollided = true;
@@ -89,7 +97,8 @@ public class Pong_Player_Keyboard_Controls : MonoBehaviour {
     private void OnCollisionExit2D(Collision2D collision)
     {
         string collided_name = collision.gameObject.name;
-        Debug.Log(gameObject.name + " no longer collides with " + collided_name);
+        if (debug)
+            Debug.Log(gameObject.name + " no longer collides with " + collided_name);
 
         if (collided_name.Contains("north"))
             isNorthWallCollided = false;
