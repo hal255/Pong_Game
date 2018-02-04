@@ -24,7 +24,7 @@ public class GameManager_ScoreTracker : MonoBehaviour {
         {
             if (pong_ball.GetScoredTarget().Contains("1"))
                 player1_score.text = UpdateScore(player1_score);
-            else
+            else if (pong_ball.GetScoredTarget().Contains("2"))
                 player2_score.text = UpdateScore(player2_score);
 
             pong_ball.ResetBall();

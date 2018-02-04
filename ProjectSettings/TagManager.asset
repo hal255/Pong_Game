@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - p2_score
+  - p1_score
+  - pong_ball
   layers:
   - Default
   - TransparentFX
