@@ -5,10 +5,13 @@ using UnityEngine.UI;
 
 public class GameManager_ScoreTracker : MonoBehaviour {
 
+    public float reset_wait_time = 1.0f;
     public Pong_Ball_Motion pong_ball;
 
     public Text player1_score;
     public Text player2_score;
+
+    private IEnumerator coroutine;
 
     // Use this for initialization
     void Start()
@@ -16,6 +19,8 @@ public class GameManager_ScoreTracker : MonoBehaviour {
         player1_score = GameObject.FindGameObjectWithTag("p1_score").GetComponent<Text>();
         player2_score = GameObject.FindGameObjectWithTag("p2_score").GetComponent<Text>();
         pong_ball = GameObject.FindGameObjectWithTag("pong_ball").GetComponent<Pong_Ball_Motion>();
+        coroutine = WaitAndReset(reset_wait_time);
+        StartCoroutine(coroutine);
     }
 
     // Update is called once per frame
@@ -28,6 +33,8 @@ public class GameManager_ScoreTracker : MonoBehaviour {
                 player2_score.text = UpdateScore(player2_score);
 
             pong_ball.ResetBall();
+            coroutine = WaitAndReset(reset_wait_time);
+            StartCoroutine(coroutine);
         }
 	}
 
@@ -39,4 +46,9 @@ public class GameManager_ScoreTracker : MonoBehaviour {
         return x + "";
     }
 
+    private IEnumerator WaitAndReset(float wait_time)
+    {
+        yield return new WaitForSeconds(wait_time);
+        pong_ball.AddRandomForce();
+    }
 }

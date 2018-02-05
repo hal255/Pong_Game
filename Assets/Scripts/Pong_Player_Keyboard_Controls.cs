@@ -65,21 +65,13 @@ public class Pong_Player_Keyboard_Controls : MonoBehaviour {
     {
         // if colliding with west wall, stop moving west
         if (!isNorthWallCollided)
-        {
-            //if (move_speed > 0)
-            //    move_speed *= -1.0f;
             transform.Translate(Vector2.up * move_speed * Time.deltaTime);
-        }
     }
     private void moveDown()
     {
         // if colliding with east wall, stop moving east
         if (!isSouthWallCollided)
-        {
-            //if (move_speed < 0)
-            //    move_speed *= -1.0f;
             transform.Translate(Vector2.down * move_speed * Time.deltaTime);
-        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
